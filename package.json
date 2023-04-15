@@ -1,0 +1,23 @@
+{
+  "name": "edge-grammy",
+  "version": "0.0.1",
+  "main": "index.mjs",
+  "dependencies": {
+    "grammy": "*"
+  },
+  "license": "MIT",
+  "description": "grammY on the Vercel Edge",
+  "author": "Vladislav Ponomarev <PonomareVlad@users.noreply.github.com> (https://PonomareVlad.ru)",
+  "funding": "https://PonomareVlad.ru/donate",
+  "keywords": [
+    "serverless",
+    "telegram",
+    "workers",
+    "worker",
+    "grammY",
+    "vercel",
+    "edge",
+    "bot",
+    "web"
+  ]
+}
