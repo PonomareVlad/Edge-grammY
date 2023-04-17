@@ -9,7 +9,7 @@ export const getURL = (path = "api/index", headers = {}, proxy = "") => {
 
 export const getHost = (headers = {}, header = "x-forwarded-host") => headers?.get(header) || process.env.VERCEL_URL;
 
-export const webhookStream = (bot, adapter = "std/http", onTimeout = "return", timeoutMilliseconds = 180_000) => {
+export const webhookStream = (bot, adapter = "std/http", onTimeout = "throw", timeoutMilliseconds = 55_000) => {
     const callback = webhookCallback(bot, adapter, onTimeout, timeoutMilliseconds);
     const encoder = new TextEncoder();
     return (...args) => {
