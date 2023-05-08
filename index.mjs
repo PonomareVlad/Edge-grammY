@@ -1,5 +1,5 @@
 import {promisify} from "util";
-import {webhookCallback} from "grammy";
+import {webhookCallback} from "grammy/web";
 
 export const wait = promisify((a, f) => setTimeout(f, a));
 
@@ -13,16 +13,16 @@ export const getHost = (headers = {}, header = "x-forwarded-host") => headers?.g
 
 export const setWebhook = (bot, path) => async ({headers}) => json(await bot.api.setWebhook(getURL(path, headers)));
 
-export const webhookStream = (bot, adapter = "std/http", onTimeout = "throw", timeoutMilliseconds = 55_000) => {
-    const callback = webhookCallback(bot, adapter, onTimeout, timeoutMilliseconds);
-    const encoder = new TextEncoder();
-    return (...args) => {
-        let streamController;
-        const stream = new ReadableStream({
-            start: controller => streamController = controller,
-            pull: controller => wait(1000).then(() => controller.enqueue(encoder.encode(".")))
-        });
-        callback(...args).finally(() => streamController.close());
-        return new Response(stream);
-    }
+export const webhookStream = (bot, onTimeout = "throw", timeoutMilliseconds = 55_000) => {
+    const callback = webhookCallback(bot, "std/http", onTimeout, timeoutMilliseconds);
+    return (...args) => new Response(new ReadableStream({
+        start: controller => {
+            const encoder = new TextEncoder();
+            const interval = setInterval(() => controller.enqueue(encoder.encode(".")), 1000);
+            return callback(...args).finally(() => {
+                clearInterval(interval);
+                controller.close();
+            });
+        }
+    }));
 }
