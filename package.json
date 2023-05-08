@@ -1,6 +1,6 @@
 {
   "name": "edge-grammy",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "index.mjs",
   "dependencies": {
     "grammy": "*"
