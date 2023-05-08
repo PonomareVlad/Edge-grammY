@@ -3,6 +3,11 @@ import {webhookCallback} from "grammy/web";
 
 export const wait = promisify((a, f) => setTimeout(f, a));
 
+export const setWebhook = (bot, path) => async ({headers}) => {
+    const result = await bot.api.setWebhook(getURL(path, headers));
+    return json({result});
+}
+
 export const json = (...args) => new Response(JSON.stringify(...args));
 
 export const getURL = (path = "api/index", headers = {}, proxy = "") => {
@@ -10,8 +15,6 @@ export const getURL = (path = "api/index", headers = {}, proxy = "") => {
 }
 
 export const getHost = (headers = {}, header = "x-forwarded-host") => headers?.get(header) || process.env.VERCEL_URL;
-
-export const setWebhook = (bot, path) => async ({headers}) => json(await bot.api.setWebhook(getURL(path, headers)));
 
 export const webhookStream = (bot, onTimeout = "throw", timeoutMilliseconds = 55_000) => {
     const callback = webhookCallback(bot, "std/http", onTimeout, timeoutMilliseconds);
