@@ -8,7 +8,24 @@ export const setWebhook = (bot, path) => async ({headers}) => {
     return json({result});
 }
 
-export const json = (...args) => new Response(JSON.stringify(...args));
+export const json = (value, options = {}) => {
+    const {
+        space,
+        status,
+        headers,
+        replacer,
+        statusText
+    } = options || {};
+    const body = JSON.stringify(value, replacer, space);
+    return new Response(body, {
+        headers: {
+            "Content-Type": "application/json",
+            ...headers
+        },
+        statusText,
+        status
+    });
+}
 
 export const getURL = (path = "api/index", headers = {}, proxy = "") => {
     return new URL(`${proxy}https://${getHost(headers)}/${path}`).href;
